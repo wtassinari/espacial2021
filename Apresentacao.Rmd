@@ -11,8 +11,9 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
 
 output: 
   prettydoc::html_pretty:
-    theme: hpstr
-    highlight: github
+#    theme: hpstr
+     theme: leonids
+     highlight: github
 html_document:
     code_folding: "hide"    
 vignette: >
@@ -38,6 +39,8 @@ to `html_document` and `html_vignette` contained in the `rmarkdown` package,
 is able to generate small and nice HTML pages.
 
 ## Styles
+
+https://ogcruz.github.io/Bookdown/dados-de-area-iii.html
 
 Currently `html_pretty` supports three page themes, `cayman` (the default),
 `tactile`, and `architect`. And there are also two syntax highlight styles:
