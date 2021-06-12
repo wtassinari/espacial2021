@@ -1,38 +1,26 @@
 ---
 title: "Introdução à Estatística Espacial: Uma aplicação na Epidemiologia"
-author: "[Wagner Tassinari](https://github.com/wtassinari/espacial2021)"
+author: "[Wagner Tassinari (DEMAT/ICE/UFRRJ)](https://github.com/wtassinari/espacial2021)"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-mail: "wtassinari@gmail.com"
+# mail: "wtassinari@gmail.com"
 # linkedin: "yan-holtz-2477534a"
 # twitter: "r_graph_gallery"
 # github: "holtzy"
 # home: "www.yan-holtz.com"
-logo: "logo_ufrrj.png"
+# logo: "logo_ufrrj.png"
 
 output: 
   prettydoc::html_pretty:
-    theme: architect
+    theme: hpstr
     highlight: github
+html_document:
+    code_folding: "hide"    
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 
-epuRate::epurate:
-    toc: TRUE
-    number_sections: FALSE
-    code_folding: "show"
 ---
-
-<style>
-#TOC {
-  top: 1%;
-  opacity: 0.5;
-}
-#TOC:hover {
-  opacity: 1;
-}
-</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
