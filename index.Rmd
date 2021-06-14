@@ -1,6 +1,6 @@
 ---
 title: "Introdução à Estatística Espacial: Uma aplicação na Epidemiologia"
-author: "[Wagner Tassinari (DEMAT/ICE/UFRRJ)](https://github.com/wtassinari/espacial2021)"
+author: "[**Wagner Tassinari (DEMAT/ICE/UFRRJ)**](https://github.com/wtassinari/espacial2021)"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 # mail: "wtassinari@gmail.com"
 # linkedin: "yan-holtz-2477534a"
@@ -24,75 +24,153 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(epuRate)
-library(rmarkdown)
+library(knitr)
+library(rmdformats)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+               cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
 ```
-  
-<br><br>
 
-Vignettes are long form documentation commonly included in packages. Because
-they are part of the distribution of the package, they need to be as compact as
-possible. The `html_pretty` output format in package
-[**prettydoc**](https://github.com/yixuan/prettydoc/) , an alternative
-to `html_document` and `html_vignette` contained in the `rmarkdown` package,
-is able to generate small and nice HTML pages.
-
-## Styles
+```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="60%", comment=NA}
+knitr::include_graphics('figuras/logo_ubuntu.png')
+```
 
 https://ogcruz.github.io/Bookdown/dados-de-area-iii.html
 
-Currently `html_pretty` supports three page themes, `cayman` (the default),
-`tactile`, and `architect`. And there are also two syntax highlight styles:
-`github` to mimic the syntax highlight on Github, and `vignette` that is used by
-`html_vignette`. If no highlight parameter is given, the default style created
-by Pandoc will be used.
 
-The theme and highlight styles can be given in the document metadata,
-for example:
+# Exemplo com os dados de dengue em Dourados/MS
 
-```yaml
-output:
-  prettydoc::html_pretty:
-    theme: cayman
-    highlight: github
+Nesta apresentação serão utilizados os dados que fizeram parte da dissertação de [Isis Rodrigues Reitman](https://sucupira.capes.gov.br/sucupira/public/consultas/coleta/trabalhoConclusao/viewTrabalhoConclusao.jsf?popup=true&id_trabalho=3666174) intitulada *“SAÚDE E AMBIENTE URBANO: A RELAÇÃO DE INCIDÊNCIA DE DENGUE E AS DISPARIDADES ESPACIAIS EM DOURADOS – MS"*, apresentada no [Programa de Pós-Graduação em Geografia da Universidade Federal da Grande Douradosos/MS](https://portal.ufgd.edu.br/pos-graduacao/mestrado-doutorado-geografia/index), em abril de 2016. 
+
+
+Essa aplicação também se encontra no [Curso de Estudos Ecológicos](https://ogcruz.github.io/) ministrado para o curso de [Pós-Graduação em Epidemiologia em Saúde Pública](http://ensino.ensp.fiocruz.br/cursos/mestrado-e-doutorado/epidemiologia-em-saude-publica) em 2019, pelos pesquisadores [Oswaldo Gonçalves Cruz (PROCC/FIOCRUZ)](https://lsbastos.github.io/PROCC/membro-9530671289607786.html) e [Wagner Tassinari (DEMAT/ICE/UFRRJ)](https://institucional.ufrrj.br/ruralpesquisa/wagner-de-souza-tassinari/)
+
+
+### Biliotecas do R que serão utilizadas
+
+```{r, echo=T}
+library(readr)
+library(tidyverse)
+library(sf)
+library(maptools)
+library(spatstat)
+library(tmap)
 ```
 
-## Happy Knitting!
+### Lendo a tabela da população por setor censitário e os shapes files do contorno e por setor censitário de Dourados/MS
 
-Feel free to use the `knitr` infrastructure with dozens of tunable options in
-your package vignette.
+```{r, echo=T}
+pop2010 <- read_csv('dados/pop2010.csv')
 
-```{r, eval=FALSE, fig.width=6, fig.height=6, fig.align='center'}
-set.seed(123)
-n <- 1000
-x1  <- matrix(rnorm(n), ncol = 2)
-x2  <- matrix(rnorm(n, mean = 3, sd = 1.5), ncol = 2)
-x   <- rbind(x1, x2)
-head(x)
-smoothScatter(x, xlab = "x1", ylab = "x2")
+unzip('malhas/Setor_UTM_SIRGAS.zip', exdir='malhas')
+setor.sf <- read_sf('malhas/Setor_UTM_SIRGAS.shp', crs = 31981)
+
+unzip('malhas/contorno.zip', exdir='malhas')
+contorno.sf <- read_sf('malhas/contorno.shp', crs = 31981)
+
 ```
 
-You can also include code snippets of languages other than R, but note that
-the block header has no curly brackets around the language name.
+### Fazendo um join com as tabelas com os setores censitários + popoulação
 
-```cpp
-// [[Rcpp::export]]
-NumericVector timesTwo(NumericVector x) {
-    return x * 2;
-}
+```{r, echo=T}
+setor.sf <- setor.sf %>% mutate (idsetor = as.numeric(CD_GEOCODI)) %>% inner_join(pop2010,by='idsetor')
 ```
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$,
-footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+### Lendo e plotando os casos de dengue georreferenciados em Dourados/MS
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(iris, 10))
+```{r, echo=T}
+casos <- read_csv('dados/dengue_dourados.csv')
+casos.sf <- st_as_sf(casos, coords = c("X", "Y"), crs = 31981)
 ```
 
-## Stay Tuned
+```{r, echo=T, out.width="70%"}
+ggplot(setor.sf) + 
+  geom_sf(fill = 'white', color='black') +
+  geom_sf(data=casos.sf, color='red',size=1) +
+  theme_void()
+```
 
-Please visit the [development page](https://github.com/yixuan/prettydoc/) of the 
-`prettydoc` package for latest updates and news. Comments, bug reports and
-pull requests are always welcome.
+### Lendo e plotando os os pontos de coleta de lixo georreferenciados em Dourados/MS
 
+```{r, echo=T}
+lixo <- read_csv2('dados/lixo_dourados.csv')
+lixo.sf <- st_as_sf(lixo, coords = c("X", "Y"), crs = 31981)
+```
+
+```{r, echo=T,  out.width="70%"}
+ggplot(setor.sf) + 
+  geom_sf(fill = 'white', color = 'black') +
+  geom_sf(data=lixo.sf,color='blue',size=1) +
+  theme_void()
+```
+
+Como podemos observar, existem alguns pontos de coleta de lixo fora do contorno de Dourados/MS
+
+### Uma forma de ficarmos só com os pontos dentro do polígono é utilizando o comando st_intersection.
+
+
+```{r, echo=T}
+lixo2.sf <- st_intersection(contorno.sf, lixo.sf)
+```
+
+```{r, echo=T,  out.width="70%"}
+ggplot(setor.sf) + 
+  geom_sf(fill = 'white', color = 'black') +
+  geom_sf(data=lixo2.sf,color='blue',size=1) +
+  theme_void()
+```
+
+### Verificando as paletas de cores
+
+```{r, echo=T,  out.width="70%"}
+library(RColorBrewer)
+display.brewer.all()
+```
+
+### Utilizando as informações dos casos (pontos) + do lixo (ponto) + população de cada setor censitário (mapa temático)
+
+```{r, echo=T,  out.width="70%"}
+ggplot(setor.sf) + 
+  geom_sf(aes(fill=pop)) + 
+  geom_sf(data=casos.sf,color='red',size=0.7, aes(colour = "Caso"), 
+          show.legend = "point") +
+  geom_sf(data=lixo2.sf,color='salmon',size=1, aes(colour = "Lixo"), 
+          show.legend = "point") +
+  scale_fill_distiller(palette ="PuBu", direction = 1) +
+  scale_colour_manual(values = c("Caso" = "red", "Lixo" = "slamon")) +
+  theme_minimal()
+```
+
+### Agora serão construidos buffers de 500m de distância ao redor de cada ponto de coleta de lixo. Isso é interessante para verificar se os casos de dengue ocorrem em um raio de até 500m de distância dos pontos de coleta de lixo. Ou seja, a pergunta é, será que a distância dos pontos de coeta de lixo influenciam a ocorrência do caso de dengue ?
+
+**Buffers:** São polígonos que contornam um objeto a uma determinada distância. Sua principal função é materializar os conceitos de “perto” e “longe”.
+
+```{r, echo=T,  out.width="70%"}
+lixo_buffer <- st_buffer(lixo2.sf, 500) 
+
+ggplot(setor.sf) + 
+  geom_sf(aes(fill=pop)) + 
+  geom_sf(data=lixo_buffer,color='gray', fill = "transparent", size=0.4) +
+  geom_sf(data=casos.sf, color='red',size=0.7) +
+  scale_fill_distiller(palette ="PuBu", direction = 1) +
+  scale_colour_manual(values = c("Caso" = "red", "Lixo" = "slamon")) +
+  theme_minimal()
+```
+
+### Represntando os casos e o lixo de forma interativa
+
+```{r, echo=T,  out.width="90%"}
+tm_shape(setor.sf) +  tm_borders("black") +
+  tm_shape(casos.sf) + tm_dots("red") +
+  tm_shape(lixo.sf) + tm_dots("green") +
+  tm_shape(lixo_buffer) + tm_borders("blue") +
+  tmap_mode("view")
+```
