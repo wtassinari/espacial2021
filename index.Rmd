@@ -68,6 +68,7 @@ library(tmap)
 ### Lendo a tabela da população por setor censitário e os shapes files do contorno e por setor censitário de Dourados/MS
 
 ```{r, echo=T}
+unzip('dados/pop2010.zip', exdir='dados')
 pop2010 <- read_csv('dados/pop2010.csv')
 
 unzip('malhas/Setor_UTM_SIRGAS.zip', exdir='malhas')
@@ -87,6 +88,7 @@ setor.sf <- setor.sf %>% mutate (idsetor = as.numeric(CD_GEOCODI)) %>% inner_joi
 ### Lendo e plotando os casos de dengue georreferenciados em Dourados/MS
 
 ```{r, echo=T}
+unzip('dados/dengue_dourados.zip', exdir='dados')
 casos <- read_csv('dados/dengue_dourados.csv')
 casos.sf <- st_as_sf(casos, coords = c("X", "Y"), crs = 31981)
 ```
@@ -101,6 +103,7 @@ ggplot(setor.sf) +
 ### Lendo e plotando os os pontos de coleta de lixo georreferenciados em Dourados/MS
 
 ```{r, echo=T}
+unzip('dados/lixo_dourados.zip', exdir='dados')
 lixo <- read_csv2('dados/lixo_dourados.csv')
 lixo.sf <- st_as_sf(lixo, coords = c("X", "Y"), crs = 31981)
 ```
@@ -173,4 +176,79 @@ tm_shape(setor.sf) +  tm_borders("black") +
   tm_shape(lixo.sf) + tm_dots("green") +
   tm_shape(lixo_buffer) + tm_borders("blue") +
   tmap_mode("view")
+```
+
+### Convertendo o dado de pontos (padrão pontual) para dados de área
+
+```{r, echo=T}
+## conta casos por setor 
+casos.sf$contador <- 1 
+casos <- setor.sf %>%  
+  st_join(casos.sf) %>% 
+  filter(CLASSI_FIN == 1) %>%  ## seleciona somente os casos confirmados
+  group_by(ID) %>% 
+  summarise(casos = sum(contador))
+
+st_geometry(casos) <- NULL  ## remove atributos de geometria
+
+## numero de depositos de Lixo por setor 
+lixo.sf$contador <- 1 
+
+lixo <- setor.sf %>%  
+  st_join(lixo.sf) %>% 
+  group_by(ID) %>% 
+  summarise(lixo = sum(contador))
+
+st_geometry(lixo) <- NULL ## remove atributos de geometria
+
+# Inserindo as contagens dos casos e de pontos de coleta de lixo no atributo com a geometria.
+setor.sf <- setor.sf %>% 
+  left_join(lixo,by = 'ID') %>% 
+  left_join(casos,by = 'ID') 
+```
+
+
+### Plotando o mapa temático dos casos por setor censitário
+
+```{r, echo=T,  out.width="70%"}
+plot(setor.sf['casos'])
+```
+
+### Plotando o mapa temático dos pontos de coleta de lixo por setor censitário
+
+```{r, echo=T,  out.width="70%"}
+plot(setor.sf['lixo'])
+```
+
+### Calculando a taxa de incidência e plotando o mapa temático dos pontos de coleta de lixo por setor censitário
+
+```{r, echo=T,  out.width="70%"}
+setor.sf$tx <- (setor.sf$casos/setor.sf$pop) * 1000
+setor.sf$tx[is.na(setor.sf$tx)] <- 0 # Transformando os missings em zero
+
+summary(setor.sf$tx)
+```
+
+### Plotando a distribuição da incidência em Dourados/MS
+
+```{r, echo=T,  out.width="70%"}
+library(wesanderson)
+pal <- wes_palette("Moonrise3", 20, type = "continuous")
+
+ggplot(setor.sf) + 
+  geom_sf(aes(fill = tx), color = 'black') +
+  scale_fill_gradientn(colours = pal) +
+  ggtitle("Taxa de incidência de Dengue") + 
+  theme_void()
+```
+
+### Kernel por atributos
+
+Vamos plotar o kernel por atributos referente a taxa de incidência de dengue em Dourados/MS.
+
+Primeiramente é necessário dissolver os polígonos em formato sf para obter o contorno. Nesse caso queremos preservar o atributo AREA
+
+```{r, echo=T,  out.width="70%"}
+dourados.contorno <- st_union(setor.sf)
+plot(dourados.contorno)
 ```
