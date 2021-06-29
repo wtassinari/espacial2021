@@ -315,15 +315,116 @@ knitr::include_graphics('figuras/logo_ubuntu.png')
 
 Fonte: [Dicas para integração e instalação do R 4.0 no Ubuntu 20.04 LTS e os pacotes espaciais](https://rtask.thinkr.fr/installation-of-r-4-0-on-ubuntu-20-04-lts-and-tips-for-spatial-packages/)
 
-https://ogcruz.github.io/Bookdown/dados-de-area-iii.html
+# Serão apresentadas duas aplicações de Estatística Espacial utilização o pacote estatístico R
+
+## Aplicação I: Construindo mapas a partir da biblioteca geobr
+
+### Bibliotecas que serão utilizadas:
+
+```{r, echo=T}
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(geobr)
+library(sf)
+library(maptools)
+library(leaflet)
+library(ggspatial)
+
+```
+
+### Para acessar os dados dos limites territoriais de todos os estados brasileiros é necessário utilizar a função *read_state*.
+
+```{r, echo=T}
+brasil.ufs <- read_state(code_state = "all", year=2019, showProgress = FALSE)
+```
+
+### Primeiro, vamos fazer um gráfico apenas com as geometrias.
+
+```{r, echo=T}
+ggplot(brasil.ufs) + 
+  geom_sf()
+```
+
+### Para a construção de um mapa onde cada estado recebe uma cor de acordo com a sua região geogrática, procedemos da seguinte forma: 
+
+```{r, echo=T,  out.width="70%"}
+ggplot(brasil.ufs) + 
+  geom_sf(aes(fill = name_region)) + 
+  labs(fill="Região")
+```
+
+### Agora utilizaremos dados relativos a porcentagem de municípios com rede de esgoto de acordo com a unidade da federação ( [fonte dos dados](https://pt.wikipedia.org/wiki/Lista_de_unidades_federativas_do_Brasil_por_acesso_%C3%A0_rede_de_esgoto) ) para fazer um gráfico. Vamos associar esses dados a tabela de acordo com a variável State e padronizaremos a porcentagem para variar de 0 a 100.
+
+```{r, echo=T,  out.width="70%"}
+acesso_san <- data.frame(code_state = c(12, 27, 16, 13, 29, 23, 53, 32, 52, 21, 51, 50, 31, 15, 
+                                   25, 41, 26, 22, 33, 24, 43, 11, 14, 42, 35, 28, 17), 
+                         com_rede = c(0.273, 0.412, 0.313, 0.177, 0.513, 0.696, 1.000, 0.974, 0.280, 0.065, 
+                                      0.191, 0.449, 0.916, 0.063, 0.731, 0.421, 0.881, 0.045, 0.924, 0.353, 
+                                      0.405, 0.096, 0.400, 0.352, 0.998, 0.347, 0.129))
+
+brasil.ufs |> 
+  left_join(acesso_san, by = "code_state") |> 
+  mutate(com_rede = 100*com_rede) |> 
+  ggplot(aes(fill = com_rede), color = "black") +
+    geom_sf() + 
+    scale_fill_viridis(name = "Municípios com rede de esgoto (%)", direction = -1) + 
+  xlab("Longitude") + 
+  ylab("Latitude") +
+  annotation_scale(location = "bl") +
+  annotation_north_arrow(location = "br") +
+    theme_minimal()
+```
+
+### Uma forma alteranativa de apresentar esses mesmos dados se dá pela apresentação de círculos com raios proporcionais a porcentgem de municípios com rede de esgoto no centroide de cada geometria (nesse caso, UF).
 
 
-## Exemplo com os dados de dengue em Dourados/MS
+```{r, echo=T,  out.width="70%"}
+coord_pontos <- brasil.ufs |> 
+                  left_join(acesso_san, by = "code_state") |> 
+                  mutate(com_rede = 100*com_rede) |> 
+                  st_centroid()
+
+ggplot(brasil.ufs)+ 
+  geom_sf() + 
+  geom_sf(data = coord_pontos, aes(size = com_rede), col = "blue", alpha = .65,
+          show.legend = "point") + 
+  scale_size_continuous(name = "Municípios com rede de esgoto (%)") + 
+  xlab("Longitude") + 
+  ylab("Latitude") +
+  annotation_scale(location = "bl") +
+  annotation_north_arrow(location = "br") +
+    theme_minimal()
+```
+
+
+### Uma alternativa interativa para trabalhar com mapas é com a utilização do pacote *leaflet*
+
+```{r, echo=T,  out.width="70%"}
+data.frame(st_coordinates(coord_pontos), 
+           com_rede = coord_pontos$com_rede, 
+           UF = coord_pontos$name_state) |>
+  leaflet() |> 
+    addTiles() |>
+    addCircleMarkers(~ X, ~ Y,
+                     label = ~ as.character(paste0(UF, ": ", com_rede, "%")),
+                     labelOptions = labelOptions(textsize = "13px"),
+                     radius = ~ com_rede/10,
+                     fillOpacity = 0.5)
+```
+
+[Créditos ao Thiago Mendonça](https://www.tiagoms.com/post/mapa/)
+
+
+---
+
+## Aplicação II: Análise exploratória utilizando os dados de dengue em Dourados/MS
 
 * Nesta apresentação serão utilizados os dados que fizeram parte da dissertação de [Isis Rodrigues Reitman](https://sucupira.capes.gov.br/sucupira/public/consultas/coleta/trabalhoConclusao/viewTrabalhoConclusao.jsf?popup=true&id_trabalho=3666174) intitulada *“SAÚDE E AMBIENTE URBANO: A RELAÇÃO DE INCIDÊNCIA DE DENGUE E AS DISPARIDADES ESPACIAIS EM DOURADOS – MS"*, apresentada no [Programa de Pós-Graduação em Geografia da Universidade Federal da Grande Douradosos/MS](https://portal.ufgd.edu.br/pos-graduacao/mestrado-doutorado-geografia/index), em abril de 2016. 
 
 
 * Essa aplicação também se encontra no [Curso de Estudos Ecológicos](https://ogcruz.github.io/) ministrado para o curso de [Pós-Graduação em Epidemiologia em Saúde Pública](http://ensino.ensp.fiocruz.br/cursos/mestrado-e-doutorado/epidemiologia-em-saude-publica) em 2019, pelos pesquisadores [Oswaldo Gonçalves Cruz (PROCC/FIOCRUZ)](https://lsbastos.github.io/PROCC/membro-9530671289607786.html) e [Wagner Tassinari (DEMAT/ICE/UFRRJ)](https://institucional.ufrrj.br/ruralpesquisa/wagner-de-souza-tassinari/)
+
 
 * **OBS:** Os dados e as malhas geográficas utilizadas nessa apresentação, estão disponíveis no seguinte endereço: ([link](https://github.com/wtassinari/espacial2021))
 
@@ -354,7 +455,10 @@ contorno.sf <- read_sf('malhas/contorno.shp', crs = 31981)
 
 ```
 
-### Fazendo um join com as tabelas com os setores censitários + popoulação
+- **OBS:** Um aspecto muito importante dos dados espaciais é o sistema de referência de coordenadas (CRS) que é usado. Por exemplo, uma localização de (140, 12) não é significativa se você sabe onde está a origem e se a coordenada x está a 140 metros, quilômetros ou talvez graus de distância dela (na direção x). ([link](https://rspatial.org/raster/spatial/6-crs.html))
+
+
+### Fazendo um join com as tabelas com os setores censitários + população
 
 ```{r, echo=T}
 setor.sf <- setor.sf %>% mutate (idsetor = as.numeric(CD_GEOCODI)) %>% inner_join(pop2010,by='idsetor')
