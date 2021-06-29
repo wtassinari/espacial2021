@@ -10,6 +10,7 @@ output:
     highlight: github
 ---
 
+
 ```{r setup, include=FALSE}
 library(knitr)
 library(rmdformats)
@@ -28,7 +29,6 @@ knitr::opts_knit$set(width=75)
 
 ```
 
-
 ```{r klippy}
 # Insert copy to clipboard buttons in HTML documents
 # remotes::install_github("rlesur/klippy")
@@ -36,12 +36,34 @@ klippy::klippy(
   lang = c("r", "markdown"),
   all_precode = FALSE,
   position = c("top", "right"),
-  color = "blue",
+  color = "navyblue",
   tooltip_message = "copiar código",
   tooltip_success = "copiado!"
 )
 
 ```
+
+```{r}
+## Color Format
+colFmt <- function(x,color) {
+  
+  outputFormat <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+  
+  if(outputFormat == 'latex') {
+    ret <- paste("\\textcolor{",color,"}{",x,"}",sep="")
+  } else if(outputFormat == 'html') {
+    ret <- paste("<font color='",color,"'>",x,"</font>",sep="")
+  } else {
+    ret <- x
+  }
+
+  return(ret)
+}
+
+```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="80%", comment=NA}
+include_graphics('figuras/rural.png')
+```
+
 
 # Introdução à Análise Estatística Espacial
 
@@ -49,25 +71,30 @@ klippy::klippy(
 
 - São métodos estatísticos que levam em consideração a localização espacial do fenômeno estudado;
 
-- Defini-se *"Análise estatística espacial quando os dados são espacialmente localizados e se considera explicitamente a possível importância de seu arranjo espacial na análise ou interpretação dos resultados"* (Bailey & Gatrell, 1995).
+- Segundo Bailey & Gatrell (1995), *"Análise estatística espacial pode ser realizada quando os dados são espacialmente localizados e se considera explicitamente a possível importância de seu arranjo espacial na análise ou interpretação dos resultados"*
 
 - A primeira pergunta a ser feita é: A distribuição dos dados apresenta um padrão aleatório ou apresenta uma agregação definida (*clusters*) ?
 
-```{r echo=F, fig.align="center", out.width= "80%", fig.show='hold'}
+```{r echo=F, fig.align="center", out.width= "70%", fig.show='hold'}
 knitr::include_graphics('figuras/Cluster.png')
 ```
 
 ## Origem da Estatística Espacial
 
-- Dr. John Snow (1813-1858) - Considerado pai da Epidemiologia Moderna
+- Dr. John Snow (1813-1858) $\rightarrow$ Considerado pai da Epidemiologia Moderna
 
 
 ```{r echo=F, fig.align="center", out.width= "60%", fig.show='hold'}
-knitr::include_graphics('figuras/snow2_2019.png')
-# knitr::include_graphics('figuras/snow_2019.png')
+include_graphics('figuras/snow2_2019.png')
 ```
 
 Mapeamento dos casos de coléra ($\bullet$) e as bombas de água (X) em Londres, 1854.
+
+
+```{r echo=F, fig.align="center", out.width= "30%", fig.show='hold'}
+include_graphics('figuras/snow_2019.png')
+```
+
 
 ## Objetivos da Estatística Espacial
 
@@ -87,25 +114,25 @@ dependência está presente em todas as direções e fica mais
 fraca a medida em que aumenta a dispersão na localização dos
 dados." (Cressie N.,1991)
 
-- *"Todas as coisas se parecem, coisas mais próxmas são mais parecidas que
-aquelas mais distantes."*  (Tobler, 1979). Também conhecida como $1^a$ Lei da Geografia
+- *"Todas as coisas se parecem, coisas mais próximas são mais parecidas que
+aquelas mais distantes."*  (Tobler, 1979). `r colFmt(" **Também conhecida como $1^a$ Lei da Geografia**",'red')`
 
 ## Tipologia dos Dados Espaciais
 
 Os diferentes tipos de dados espaciais são tradicionalmente classificados de acordo com uma tipologia. Esta caracterização diz respeito a natureza estocástica da observação.
 
-Cressie divide a estatı́stica espacial em 3 grandes áreas:
+Noel Cressie (1993) divide a estatı́stica espacial em 3 grandes áreas:
 
-  i) Dados de processos pontuais
+  i) `r colFmt(" **Dados de processos pontuais**",'darkmagenta')`
 
-  ii) Dados de geoestatística
+  ii) `r colFmt(" **Dados de geoestatística**",'darkmagenta')`
 
-  iii) Dados de área
+  iii) `r colFmt(" **Dados de área**",'darkmagenta')`
 
-Existem métodos estatı́sticos diferentes para descrever ou analisar estes tipos de dados.
+Existem métodos estatı́sticos diferentes para descrever ou analisar estes tipos de dados. Exemplo:
 
-```{r echo=F, fig.align="center", out.width= "60%", fig.show='hold'}
-knitr::include_graphics('figuras/slide4.jpg')
+```{r echo=F, fig.align="center", out.width= "70%", fig.show='hold'}
+include_graphics('figuras/slide4.jpg')
 
 ```
 
@@ -118,27 +145,38 @@ knitr::include_graphics('figuras/slide4.jpg')
 * Neste caso, o dado aleatório de interesse é a localização espacial do evento.
 
 
-```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="30%", comment=NA}
+```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="25%", comment=NA}
 knitr::include_graphics('figuras/coordenadas.png')
 ```
 
-```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="70%", comment=NA}
+```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="60%", comment=NA}
 knitr::include_graphics('figuras/pontos1.jpg')
 ```
 
-```{r echo=F, fig.align="center", out.width= "60%", fig.show='hold'}
+```{r echo=F, fig.align="center", out.width= "55%", fig.show='hold'}
 knitr::include_graphics('figuras/Cluster2.png')
 ```
 
 ### Estimativas de Kernel (ou Mapas de Calor)
 
+
+
+```{r echo=F, fig.align="center", out.width= "45%", fig.show='hold'}
+knitr::include_graphics('figuras/kernel2.png')
+```
+
+#### Estimador de intensidade de distribuição de pontos: 
+
+$$\hat{\lambda}_{\tau}(u) = \dfrac{1}{\tau^2}\sum k(\dfrac{d(u_i , u)}{\tau}), d(u_i , u) \leq \tau$$
+[*Fonte: Referência científica: Druck, S.; Carvalho, M.S.; Câmara, G.; Monteiro, A.V.M. (eds) "Análise Espacial de Dados Geográficos". Brasília, EMBRAPA, 2004](http://www.dpi.inpe.br/gilberto/livro/analise/cap2-eventos.pdf)
+
 ```{r echo=F, fig.align="center", out.width= "60%", fig.show='hold'}
-knitr::include_graphics('figuras/kernel.png')
+knitr::include_graphics('figuras/kernel3.png')
 ```
 
 ### Localização da ocorrência de casos de dengue em Belo Horizonte/MG
 
-```{r echo=F, fig.align="center", out.width= "60%", fig.show='hold'}
+```{r echo=F, fig.align="center", out.width= "50%", fig.show='hold'}
 knitr::include_graphics('figuras/dengueBH.png')
 ```
 
@@ -146,75 +184,131 @@ knitr::include_graphics('figuras/dengueBH.png')
 
 * Podemos definir como sendo uma análise de um atributo espacialmente contínuo amostrado em localizações fixas.
 
-* Os dados compreendem um conjunto de localizações (em geral latitudes e longitudes), mas agregados a eles uma medida, como por exemplo:
+* Os dados compreendem um conjunto de localizações (em geral latitudes e longitudes), mas atribuidos a eles uma medida, como por exemplo: volume de chuva, concentração de poluentes no ar, número de ovos de Aedes postado em ovitrampas, etc.
 
-* Bastante utilizada em ciências ambientais (ex: volume de chuva, concentração de poluentes no ar, número de ovos de Aedes postado em ovitrampas, etc.)
+* Amostragem em duas dimensões:
+
+```{r echo=F, fig.align="center", out.width= "25%", fig.show='hold'}
+knitr::include_graphics('figuras/variograma3.png')
+```
+
+
+
+* A determinação experimental do semivariograma, para cada valor de $h$, considera todos os pares de amostras $z(x)$ e $z(x+h)$, separadas pelo vetor distância $h$, a partir da equação: 
+
+$$\hat{\delta}(h) = \dfrac{1}{2N(h)}\sum^{N(h)}_{i=1}[z(x_i) - z(x_i + h)]^2 $$
+
+* Sendo $\hat{\delta}(h)$ o semivariograma estimado e $N(h)$ o número de pares de valores medidos, $z(x)$ e $z(x+h)$, separados pelo vetor $h$.  
+
+```{r echo=F, fig.align="center", out.width= "40%", fig.show='hold'}
+include_graphics('figuras/variograma1.png')
+```
+
+* Esta fórmula, entretanto, não é robusta. Podem existir situações em que variabilidade local não é constante e se
+modifica ao longo da área de estudo (heteroscedasticidade). 
+
+```{r echo=F, fig.align="center", out.width= "40%", fig.show='hold'}
+include_graphics('figuras/variograma2.png')
+```
+
+[*Fonte: Referência científica: Druck, S.; Carvalho, M.S.; Câmara, G.; Monteiro, A.V.M. (eds) "Análise Espacial de Dados Geográficos". Brasília, EMBRAPA, 2004](http://www.dpi.inpe.br/gilberto/livro/analise/cap3-superficies.pdf)
+
 
 ### Exemplo: Mapa sobre o teor de argila no solo.
 
-```{r echo=F, fig.align="center", out.width= "80%", fig.show='hold'}
+```{r echo=F, fig.align="center", out.width= "70%", fig.show='hold'}
 knitr::include_graphics('figuras/geoestatistica7.png')
 ```
 
-* Aqui os pesos são determinados a partir de uma análise espacial, baseada no **semivariograma** experimental. 
 
-```{r echo=F, fig.align="center", out.width= "30%", fig.show='hold'}
-knitr::include_graphics(c('figuras/variograma1.png', 'figuras/variograma2.png'))
-```
-
-* Além disso, a **Krigeagem** fornece, em média, estimativas não tendênciosas e com variância mínima.
 
 
 ## Dados de Área
 
-* Na análise de áreas o atributo estudado é em geral resultado de uma contagem ou uma medida de síntese (em geral somas ou médias).
+* Na análise de áreas o atributo estudado é em geral resultado de uma contagem ou uma medida de síntese (em geral somas ou médias) em uma determinada área bem definida, por exemplo um polígono.
+
+* Tal polígono cuja forma pode ser complexa bem como as relações de vizinhança.
 
 * O objetivo é a detecção e explicação de padrões e tendências observados entre áreas.
 
-* Área é definida por um polígono cuja forma pode ser complexa bem como as relações de vizinhança.
 
 ### Mapa Temático
 
-```{r echo=F, fig.align="center", out.width="80%", fig.cap="Taxas de câncer de pulmão na população branca masculina nos Estados Unidos, por condados no ano de 1998"}
+#### Taxas de câncer de pulmão na população branca masculina nos Estados Unidos, por condados no ano de 1998
+
+```{r echo=F, fig.align="center", out.width="70%"}
 knitr::include_graphics('figuras/area1_2019.png')
 ```
 
 ### Matriz de Vizinhança
 
-```{r echo=F, fig.align="center", out.width="60%"}
+```{r echo=F, fig.align="center", out.width="55%"}
 knitr::include_graphics('figuras/vizinhanca.png')
 ```
 
-### Lisa Map ou Moran Local
+### Moran Global, Moran Local e Lisa Map
 
-```{r echo=F, fig.align="center", out.width="60%", fig.cap="Mapa temáticos com o Moran Global da Incidência de Hansenı́ase São Paulo,1989"}
-knitr::include_graphics('figuras/Moran_hansen0.png')
+```{r echo=F, fig.align="center", out.width="20%", fig.cap="Moran Global"}
+knitr::include_graphics('figuras/moran_global.png')
 ```
 
-### Lisa Map ou Moran Local
-
-```{r echo=F, fig.align="center", out.width="60%"}
-knitr::include_graphics('figuras/moran.png')
+```{r echo=F, fig.align="center", out.width="30%", fig.cap="Moran Local"}
+knitr::include_graphics('figuras/moran_local.png')
 ```
+#### Desigualdade no nível distrital na cobertura de saúde reprodutiva, materna, neonatal e infantil na Índia
+
+```{r echo=F, fig.align="center", out.width="90%"}
+knitr::include_graphics('figuras/moran_local2.png')
+```
+
+[Fonte: PANDA, Basant Kumar; KUMAR, Gulshan; AWASTHI, Ashish. District level inequality in reproductive, maternal, neonatal and child health coverage in India. BMC public health, v. 20, n. 1, p. 1-10, 2020.](https://bmcpublichealth.biomedcentral.com/articles/10.1186/s12889-020-8151-9)
 
 ### Modelos de Regressão Espacial
 
-* Hipótese de independência das observações em geral é Falsa $\rightarrow$ Dependência Espacial
+* `r colFmt(" Hipótese de independência das observações em geral é Falsa ",'orange')` $\rightarrow$ Dependência Espacial
 
 * Efeitos Espaciais $\rightarrow$ Se existir forte tendência ou correlação espacial, os resultados serão influenciados, apresentando associação estatística onde não existe (e vice-versa);
 
-* Como verificar ? $\rightarrow$ Medir a autocorrelação espacial dos resíduos da regressão (Índice de Moran dos resíduos).
+* `r colFmt("**Como verificar ?** ",'darkred')` $\rightarrow$ Medir a autocorrelação espacial dos resíduos da regressão (Índice de Moran dos resíduos).
 
 * Autocorrelação espacial constatada ! E agora ? $\rightarrow$ Utilizar Modelos de regressão que incorporam efeitos espaciais:
 
-    i) **Globais:** utilizam um único parâmetro para capturar a estrutura de correlação espacial $\rightarrow$ ex: *Spatial Error Models (CAR)*: atribuem a autocorrelação ao erro;
+    i) **Modelos Globais:** utilizam um único parâmetro para capturar a estrutura de correlação espacial $\rightarrow$ ex: *Spatial Error Models (CAR)*
     
-    ii) **Locais:** parâmetros variam continuamente no espaço (ex: *Geographically weighted regression (GWR)*)
+$$y_i = \beta_0 + \sum^{p}_{k} \beta_k x_{ik}  + \varepsilon_i \text{    , sendo  }  \varepsilon_i = \lambda  W + \xi$$
+
+  * Os efeitos da autocorrelação espacial são associados ao termo de erro. Sendo  $W$ a matriz de vizinhaça, $\varepsilon$ a componente do erro com efeitos espaciais, $λ$ é o coeficiente autoregressivo e $\xi$ é a componente do erro com variância constante e não
+correlacionada. 
+
+  * A hipótese nula para a não existência de autocorrelação é que $\lambda = 0$, ou seja, o termo de erro não é espacialmente correlacionado. 
+
+    ii) **Modelos Locais:** parâmetros variam continuamente no espaço ex: *Geographically Weighted Regression (GWR)*
     
-    
-## Como trabalhar com Análise Estatística Espacial
+$$y_i = \beta_{0}(u_i, v_i) + \sum^{p}_{k}  \beta_k (u_i, v_i) x_{ik} + \varepsilon_i \text{    , sendo  } (u_i, v_i) \text{    as coordenadas geográficas}$$
+[Fonte: ARDILLY, Pascal et al. Manuel d’analyse spatiale. 2018.](https://ec.europa.eu/eurostat/documents/3859598/9462709/INSEE-ESTAT-SPATIAL-ANA-18-EN.pdf)
+
+## Como trabalhar com Análise Estatística Espacial: Algumas ferramentas
+
+### SiG QGIS
 
 ```{r echo=F, fig.align="center", out.width="60%"}
+knitr::include_graphics('figuras/QGIS.png')
+```
+
+[QGIS: Um Sistema de Informação Geográfica livre e aberto](https://www.qgis.org/pt_BR/site/)
+
+### GEODA
+
+```{r echo=F, fig.align="center", out.width="70%"}
+knitr::include_graphics('figuras/GEODA.png')
+```
+
+[GEODA: AN INTRODUCTION TO SPATIAL DATA ANALYSIS](https://spatial.uchicago.edu/geoda)
+
+
+### R
+
+```{r echo=F, fig.align="center", out.width="50%"}
 knitr::include_graphics('figuras/logo_ubuntu.png')
 ```
 
@@ -272,7 +366,7 @@ casos <- read_csv('dados/dengue_dourados.csv')
 casos.sf <- st_as_sf(casos, coords = c("X", "Y"), crs = 31981)
 ```
 
-```{r, echo=T, out.width="70%"}
+```{r, echo=T, out.width="60%"}
 ggplot(setor.sf) + 
   geom_sf(fill = 'white', color='black') +
   geom_sf(data=casos.sf, color='red',size=1) +
@@ -355,10 +449,10 @@ tm_shape(setor.sf) +  tm_borders("black") +
 ```{r, echo=T}
 ## conta casos por setor 
 casos.sf$contador <- 1 
-casos <- setor.sf %>%  
-  st_join(casos.sf) %>% 
+casos <- setor.sf |>  
+  st_join(casos.sf) |> 
   filter(CLASSI_FIN == 1) %>%  ## seleciona somente os casos confirmados
-  group_by(ID) %>% 
+  group_by(ID) |> 
   summarise(casos = sum(contador))
 
 st_geometry(casos) <- NULL  ## remove atributos de geometria
@@ -366,16 +460,16 @@ st_geometry(casos) <- NULL  ## remove atributos de geometria
 ## numero de depositos de Lixo por setor 
 lixo.sf$contador <- 1 
 
-lixo <- setor.sf %>%  
-  st_join(lixo.sf) %>% 
-  group_by(ID) %>% 
+lixo <- setor.sf |>  
+  st_join(lixo.sf) |> 
+  group_by(ID) |> 
   summarise(lixo = sum(contador))
 
 st_geometry(lixo) <- NULL ## remove atributos de geometria
 
 # Inserindo as contagens dos casos e de pontos de coleta de lixo no atributo com a geometria.
-setor.sf <- setor.sf %>% 
-  left_join(lixo,by = 'ID') %>% 
+setor.sf <- setor.sf |> 
+  left_join(lixo,by = 'ID') |> 
   left_join(casos,by = 'ID') 
 ```
 
@@ -430,7 +524,7 @@ plot(dourados.contorno)
 dourados.w <- as.owin(st_geometry(dourados.contorno))
 ```
 
-### Extraindo os centróidas dos polígonos em Dourados/MS
+### Extraindo os centróides dos polígonos em Dourados/MS
 
 ```{r, echo=T,  out.width="70%"}
 centroides <- st_centroid(st_geometry(setor.sf))
@@ -542,295 +636,9 @@ ggplot(setor.sf) +
   theme_void()
 ```
 
-##  Modelos Linear, CAR e GWR
-
-### Ajustando o modelo de regressão linear simples.
-
-```{r, echo=T,  out.width="70%"}
-setor.sf$lixo[is.na(setor.sf$lixo)] <- 0 # Transformando os missings em zero
-
-dourados.lm <- lm(tx ~ lixo, data=setor.sf)
-summary(dourados.lm)
-```
-
-### Checando os residuos para verificar a presença de autocorrelação.
-
-```{r, echo=T,  out.width="70%"}
-dourados.lm$lmresid<-residuals(dourados.lm)
-moran.test(dourados.lm$lmresid, pesos.viz)
-```
-
-### Ajustando o modelo CAR
-
-```{r, echo=T,  out.width="70%"}
-dourados.car<-errorsarlm(tx ~ lixo, data=setor.sf, listw=pesos.viz)
-summary(dourados.car)
-```
-
-### Checando os residuos para verificar a presença de autocorrelação
-
-```{r, echo=T,  out.width="70%"}
-dourados.car$carresid<-residuals(dourados.car)
-moran.test(dourados.car$carresid, pesos.viz)
-```
-
-### Ajustando o modelo GWR
-
-```{r, echo=T,  out.width="70%"}
-# Biblioteca para ajustar o  modelos GWR
-library(spgwr)
-# Estimando a largura de banda “ideal” para o kernel
-GWRbanda <- gwr.sel(tx ~ lixo, data=setor.sf, coords=cbind(centroides.sp$X,centroides.sp$Y) , adapt=T) 
-```
-
-```{r, echo=T,  out.width="70%"}
-dourados.gwr = gwr(tx ~ lixo, data=setor.sf, coords=cbind(centroides.sp$X,centroides.sp$Y), adapt=GWRbanda, hatmatrix=TRUE, se.fit=TRUE) 
-
-dourados.gwr
-```
-
-```{r, echo=T,  out.width="70%"}
-# Colocando a saída do modelo dentro de um dataframe.
-
-results<-as.data.frame(dourados.gwr$SDF)
-head(results)
-```
-
-### Verificando a distribuição dos coeficientes de regressão para a variável lixo
-
-
-```{r, echo=T,  out.width="70%"}
-hist(results$lixo)
-abline(v = median(results$lixo), col="red")
-```
-
-
-### Verificando a distribuição dos localR2
-
-
-```{r, echo=T,  out.width="70%"}
-hist(results$localR2)
-abline(v =median(results$localR2), col="blue")
-```
-
-### Incorporando alguns parâmetros de saída do modelo na tabela setor.sf
-
-```{r, echo=T,  out.width="70%"}
-setor.sf$coef.lixo<-results$lixo
-setor.sf$localR2<-results$localR2
-setor.sf$pred.gwr<-results$pred
-```
-
-### Mapa dos coeficientes de regressão para a variável lixo
-
-```{r, echo=T,  out.width="70%"}
-map.lixo <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = coef.lixo), color = 'black') +
-  scale_fill_gradientn(colours = pal) +
-  ggtitle("Distribuição dos coef. var. lixo") + 
-  theme_void()
-map.lixo
-```
-
-### Checando os residuos para verificar a presença de autocorrelação para o modelo GWR.
-
-```{r, echo=T,  out.width="70%"}
-# Calculando os resíduos para o modelo GWR
-results$residuos <- setor.sf$tx - results$pred
-
-moran.test(results$residuos, pesos.viz)
-```
-
-### Mapeando os coeficientes de regressão para a variável lixo por significancia através do teste de wald
-
-```{r, echo=T,  out.width="70%"}
-# Calculando a estatística de wald
-setor.sf$wald.teste <- abs(results$lixo/results$lixo_se)
-# Dicotomizando a estatística de wald
-setor.sf$wald.teste <- ifelse(setor.sf$wald.teste < 2, 0, 1)
-
-
-map.wald <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = factor(wald.teste)), color = 'black') +
-  scale_fill_manual(values = c("white", "purple"), labels=c("< 2", ">= 2"), name='Wald') +
-  ggtitle("Coef. lixo significativos") + 
-  theme_void()
-
-
-library(gridExtra)
-grid.arrange(map.lixo, map.wald, ncol=2)
-```
-
-### Mapa dos coeficientes de determinação regionalizados ($R^2$ local).
-
-
-```{r, echo=T,  out.width="70%"}
-ggplot(setor.sf) + 
-  geom_sf(aes(fill = localR2), color = 'black') +
-  scale_fill_gradientn(colours = pal) +
-  ggtitle("R² local") + 
-  theme_void()
-```
-
-### Verificando a distribuição dos preditos.
-
-```{r, echo=T,  out.width="70%"}
-histdens <- function(x,titulo='') {
- densi  <- density(x)
- xli  <- range(densi$x)
- yli  <- range(densi$y)
- hist(x,col="red",probability = T,xlim = xli,ylim = yli,main=titulo)
- lines(densi,lwd=2)
- abline(v=median(x),lwd=4,col=4,lty=2)
-}
-
-attach(mtcars)
-par(mfrow=c(2,2))
-
-hist.tx <-  histdens(setor.sf$tx, "Tx Bruta")
-hist.lm <-  histdens(dourados.lm$fitted.values, "Pred LM")
-hist.car <-  histdens(dourados.car$fitted.values, "Pred CAR")
-hist.gwr <-  histdens(results$pred, "Pred GWR")
-
-```
-
-### Mapeando os valores observados e preditos dos modelos ajustados
-
-
-```{r, echo=T,  out.width="70%"}
-library(colorspace) # 
-
-setor.sf$brks <- cut(setor.sf$tx, include.lowest=TRUE,  right=TRUE,
-                     breaks=c(-4, 0, 2, 4, 10, 57), 
-                     labels=c("0", "0 - 2", "2 - 4", "4 - 10", "> 10"))
-
-tx.bruta <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = brks), color = 'black') +
-  ggtitle("Taxa Bruta") + 
-  scale_fill_discrete_sequential(palette ='Heat2',  
-                                 c1=80,c2 =30,l1=30,l2=90,p1=0.2,p2=1.5,
-                                 na.value = "grey75", 
-                                 drop=FALSE,
-                                 name='Taxa') +
-  theme_void()
-
-
-
-setor.sf$brks.lm <- cut(dourados.lm$fitted.values, lowest=TRUE,  right=TRUE,
-                        breaks=c(-4, 0, 2, 4, 10, 57), 
-                        labels=c("0", "0 - 2", "2 - 4", "4 - 10", "> 10"))
-
-
-pred.lm <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = brks.lm), color = 'black') +
-  ggtitle("Taxa Predita - LM") + 
-  scale_fill_discrete_sequential(palette ='Heat2',  
-                                 c1=80,c2 =30,l1=30,l2=90,p1=0.2,p2=1.5,
-                                 na.value = "grey75", 
-                                 drop=FALSE,
-                                 name='Taxa') +
-  theme_void()
-
-setor.sf$brks.car <- cut(dourados.car$fitted.values, lowest=TRUE,  right=TRUE,
-                         breaks=c(-4, 0, 2, 4, 10, 57), 
-                         labels=c("0", "0 - 2", "2 - 4", "4 - 10", "> 10"))
-
-
-pred.car <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = brks.car), color = 'black') +
-  ggtitle("Taxa Predita - CAR") + 
-  scale_fill_discrete_sequential(palette ='Heat2',  
-                                 c1=80,c2 =30,l1=30,l2=90,p1=0.2,p2=1.5,
-                                 na.value = "grey75", 
-                                 drop=FALSE,
-                                 name='Taxa') +
-  theme_void()
-
-setor.sf$brks.gwr <- cut(results$pred, lowest=TRUE,  right=TRUE,
-                         breaks=c(-4, 0, 2, 4, 10, 57), 
-                         labels=c("0", "0 - 2", "2 - 4", "4 - 10", "> 10"))
-
-
-pred.gwr <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = brks.car), color = 'black') +
-  ggtitle("Taxa Predita - GWR") + 
-  scale_fill_discrete_sequential(palette ='Heat2',  
-                                 c1=80,c2 =30,l1=30,l2=90,p1=0.2,p2=1.5,
-                                 na.value = "grey75", 
-                                 drop=FALSE,
-                                 name='Taxa') +
-  theme_void()
-
-library(gridExtra)
-grid.arrange(tx.bruta, pred.lm, pred.car, pred.gwr, ncol=2)
-```
-
-### Verificando a distribuição dos resíduoas .
-
-
-```{r, echo=T,  out.width="70%"}
-library(vioplot)
-vioplot(dourados.lm$residuals, dourados.car$residuals, results$residuos, names=c("LM", "CAR", "GWR"), col="orange")
-title("Gráficos violinos da distribuição dos resíduos")
-```
-
-### Mapeando os resíduos dos modelos ajustados
-
-```{r, echo=T,  out.width="70%"}
-library(colorspace) # 
-
-setor.sf$brks.res.lm <- cut(dourados.lm$residuals, include.lowest=TRUE,  right=TRUE,
-                            breaks=c( -14, -5, -1, 1, 5, 52), 
-                            labels=c("< -5", "-5 a -1", "0", "1 a 5", "> 5"))
-
-res.lm <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = brks.res.lm), color = 'black') +
-  ggtitle("Resíduos - LM") + 
-  scale_fill_discrete_sequential(palette ='Purple-Yellow',  
-                                 c1=80,c2 =30,l1=30,l2=90,p1=0.2,p2=1.5,
-                                 na.value = "grey75", 
-                                 drop=FALSE,
-                                 name='Taxa') +
-  theme_void()
-
-setor.sf$brks.res.car <- cut(dourados.car$residuals, include.lowest=TRUE,  right=TRUE,
-                             breaks=c( -14, -5, -1, 1, 5, 52), 
-                             labels=c("< -5", "-5 a -1", "0", "1 a 5", "> 5"))
-
-res.car <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = brks.res.car), color = 'black') +
-  ggtitle("Resíduos - CAR") + 
-  scale_fill_discrete_sequential(palette ='Purple-Yellow',  
-                                 c1=80,c2 =30,l1=30,l2=90,p1=0.2,p2=1.5,
-                                 na.value = "grey75", 
-                                 drop=FALSE,
-                                 name='Taxa') +
-  theme_void()
-
-
-setor.sf$brks.res.gwr <- cut(results$residuos, include.lowest=TRUE,  right=TRUE,
-                             breaks=c( -14, -5, -1, 1, 5, 52), 
-                             labels=c("< -5", "-5 a -1", "0", "1 a 5", "> 5"))
-
-res.gwr <- ggplot(setor.sf) + 
-  geom_sf(aes(fill = brks.res.gwr), color = 'black') +
-  ggtitle("Resíduos - GWR") + 
-  scale_fill_discrete_sequential(palette ='Purple-Yellow',  
-                                 c1=80,c2 =30,l1=30,l2=90,p1=0.2,p2=1.5,
-                                 na.value = "grey75", 
-                                 drop=FALSE,
-                                 name='Taxa') +
-  theme_void()
-
-
-library(gridExtra)
-grid.arrange(res.lm, res.car, res.gwr, ncol=2)
-```
-
 ## Bibliografia sugerida
 
-* Druck, S.; Carvalho, M.S.; Câmara, G.; Monteiro, A.V.M. (eds) . [Análise Espacial de Dados Geográficos](http://www.dpi.inpe.br/gilberto/livro/analise/). Brasília, EMBRAPA, 2004.
-
+* Druck, S.; Carvalho, M.S.; Câmara, G.; Monteiro, A.V.M. (eds). [Análise Espacial de Dados Geográficos](http://www.dpi.inpe.br/gilberto/livro/analise/). Brasília, EMBRAPA, 2004.
 
 * Interactive Spatial Data Analysis by Trevor C. Bailey , Anthony C. Gatrell Routledge, 1995
 
