@@ -1,2 +1,3 @@
-# espacial2021
-Seminário sobre Estatística Espacial no PPGEAP/UFRRJ 2021
+# Seminário do Programa de Pós-Graduação em Estatística Aplicada (PPGEAD): Introdução a Estatística Espacial
+
+Prof. Wagner Tassinari (DEMAT/ICE/UFRRJ)
