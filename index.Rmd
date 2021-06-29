@@ -320,10 +320,12 @@ https://ogcruz.github.io/Bookdown/dados-de-area-iii.html
 
 ## Exemplo com os dados de dengue em Dourados/MS
 
-Nesta apresentação serão utilizados os dados que fizeram parte da dissertação de [Isis Rodrigues Reitman](https://sucupira.capes.gov.br/sucupira/public/consultas/coleta/trabalhoConclusao/viewTrabalhoConclusao.jsf?popup=true&id_trabalho=3666174) intitulada *“SAÚDE E AMBIENTE URBANO: A RELAÇÃO DE INCIDÊNCIA DE DENGUE E AS DISPARIDADES ESPACIAIS EM DOURADOS – MS"*, apresentada no [Programa de Pós-Graduação em Geografia da Universidade Federal da Grande Douradosos/MS](https://portal.ufgd.edu.br/pos-graduacao/mestrado-doutorado-geografia/index), em abril de 2016. 
+* Nesta apresentação serão utilizados os dados que fizeram parte da dissertação de [Isis Rodrigues Reitman](https://sucupira.capes.gov.br/sucupira/public/consultas/coleta/trabalhoConclusao/viewTrabalhoConclusao.jsf?popup=true&id_trabalho=3666174) intitulada *“SAÚDE E AMBIENTE URBANO: A RELAÇÃO DE INCIDÊNCIA DE DENGUE E AS DISPARIDADES ESPACIAIS EM DOURADOS – MS"*, apresentada no [Programa de Pós-Graduação em Geografia da Universidade Federal da Grande Douradosos/MS](https://portal.ufgd.edu.br/pos-graduacao/mestrado-doutorado-geografia/index), em abril de 2016. 
 
 
-Essa aplicação também se encontra no [Curso de Estudos Ecológicos](https://ogcruz.github.io/) ministrado para o curso de [Pós-Graduação em Epidemiologia em Saúde Pública](http://ensino.ensp.fiocruz.br/cursos/mestrado-e-doutorado/epidemiologia-em-saude-publica) em 2019, pelos pesquisadores [Oswaldo Gonçalves Cruz (PROCC/FIOCRUZ)](https://lsbastos.github.io/PROCC/membro-9530671289607786.html) e [Wagner Tassinari (DEMAT/ICE/UFRRJ)](https://institucional.ufrrj.br/ruralpesquisa/wagner-de-souza-tassinari/)
+* Essa aplicação também se encontra no [Curso de Estudos Ecológicos](https://ogcruz.github.io/) ministrado para o curso de [Pós-Graduação em Epidemiologia em Saúde Pública](http://ensino.ensp.fiocruz.br/cursos/mestrado-e-doutorado/epidemiologia-em-saude-publica) em 2019, pelos pesquisadores [Oswaldo Gonçalves Cruz (PROCC/FIOCRUZ)](https://lsbastos.github.io/PROCC/membro-9530671289607786.html) e [Wagner Tassinari (DEMAT/ICE/UFRRJ)](https://institucional.ufrrj.br/ruralpesquisa/wagner-de-souza-tassinari/)
+
+* **OBS:** Os dados e as malhas geográficas utilizadas nessa apresentação, estão disponíveis no seguinte endereço: ([link](https://github.com/wtassinari/espacial2021))
 
 
 ### Biliotecas do R que serão utilizadas
