@@ -2,12 +2,11 @@
 title: "Seminário do Programa de Pós-Graduação em Estatística Aplicada (PPGEAD): Introdução a Estatística Espacial"
 author: "[**Wagner Tassinari (DEMAT/ICE/UFRRJ)**](https://github.com/wtassinari/espacial2021)"
 date: "16/07/2021"
-logo: "figuras/logo_ufrrj.png"
-
 output:
   prettydoc::html_pretty:
     theme: leonids
     highlight: github
+    toc: true
 ---
 
 
@@ -59,8 +58,11 @@ colFmt <- function(x,color) {
 
   return(ret)
 }
+```
 
-```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="80%", comment=NA}
+
+```{r echo=F, fig.align="center", out.width="90%"}
+
 include_graphics('figuras/rural.png')
 ```
 
@@ -131,7 +133,7 @@ Noel Cressie (1993) divide a estatı́stica espacial em 3 grandes áreas:
 
 Existem métodos estatı́sticos diferentes para descrever ou analisar estes tipos de dados. Exemplo:
 
-```{r echo=F, fig.align="center", out.width= "70%", fig.show='hold'}
+```{r echo=F, fig.align="center", out.width= "75%", fig.show='hold'}
 include_graphics('figuras/slide4.jpg')
 
 ```
@@ -145,11 +147,11 @@ include_graphics('figuras/slide4.jpg')
 * Neste caso, o dado aleatório de interesse é a localização espacial do evento.
 
 
-```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="25%", comment=NA}
+```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="30%", comment=NA}
 knitr::include_graphics('figuras/coordenadas.png')
 ```
 
-```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="60%", comment=NA}
+```{r echo=F, fig.align="center", message=FALSE, warning=FALSE, comments=NA, out.width="70%", comment=NA}
 knitr::include_graphics('figuras/pontos1.jpg')
 ```
 
@@ -753,3 +755,25 @@ ggplot(setor.sf) +
 * Applied Spatial Data Analysis with R; Roger S. Bivand, Edzer Pebesma , Virgilio Gomez-Rubio Springer; Edição: 2nd ed. 2013
 
 * Geocomputation with R by Robin Lovelace, Jakub Nowosad and Jannes Muenchow. [Geocomputation with R](https://geocompr.robinlovelace.net/), 2021.
+
+# Programa de Pós-Graduação em Epidemiologia em Saúde Pública (ENSP/FIOCRUZ)
+
+- Programa de Pós-Graduação em Epidemiologia em Saúde Pública (ENSP/FIOCRUZ) [link](http://ensino.ensp.fiocruz.br/cursos/mestrado-e-doutorado/epidemiologia-em-saude-publica))
+
+```{r echo=F, fig.align="center", out.width="80%"}
+include_graphics('figuras/programa_epidemiologia.png')
+```
+
+# Programa de Pós-Graduação em Ciências Veterinárias (IV/UFRRJ)
+
+- Programa de Pós-Graduação em Ciências Veterinárias (IV/UFRRJ) [link](http://cursos.ufrrj.br/posgraduacao/ppgcv/)
+
+```{r echo=F, fig.align="center", out.width="80%"}
+include_graphics('figuras/programa_veterinaria.png')
+```
+
+# Obrigado !!!!!
+
+```{r echo=F, fig.align="center", out.width="90%"}
+include_graphics('figuras/Obrigado.png')
+```
