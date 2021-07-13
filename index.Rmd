@@ -167,7 +167,7 @@ knitr::include_graphics('figuras/Cluster2.png')
 knitr::include_graphics('figuras/kernel2.png')
 ```
 
-#### Estimador de intensidade de distribuição de pontos: 
+* Estimador de intensidade de distribuição de pontos: 
 
 $$\hat{\lambda}_{\tau}(u) = \dfrac{1}{\tau^2}\sum k(\dfrac{d(u_i , u)}{\tau}), d(u_i , u) \leq \tau$$
 [*Fonte: Referência científica: Druck, S.; Carvalho, M.S.; Câmara, G.; Monteiro, A.V.M. (eds) "Análise Espacial de Dados Geográficos". Brasília, EMBRAPA, 2004](http://www.dpi.inpe.br/gilberto/livro/analise/cap2-eventos.pdf)
@@ -176,7 +176,7 @@ $$\hat{\lambda}_{\tau}(u) = \dfrac{1}{\tau^2}\sum k(\dfrac{d(u_i , u)}{\tau}), d
 knitr::include_graphics('figuras/kernel3.png')
 ```
 
-### Localização da ocorrência de casos de dengue em Belo Horizonte/MG
+* Localização da ocorrência de casos de dengue em Belo Horizonte/MG
 
 ```{r echo=F, fig.align="center", out.width= "50%", fig.show='hold'}
 knitr::include_graphics('figuras/dengueBH.png')
@@ -188,19 +188,17 @@ knitr::include_graphics('figuras/dengueBH.png')
 
 * Os dados compreendem um conjunto de localizações (em geral latitudes e longitudes), mas atribuidos a eles uma medida, como por exemplo: volume de chuva, concentração de poluentes no ar, número de ovos de Aedes postado em ovitrampas, etc.
 
-* Amostragem em duas dimensões:
+
+* A determinação experimental do semivariograma, para cada valor de $x_i$, considera todos os pares de amostras $z(x)$ e $z(x+h)$, separadas pelo vetor distância $h$, a partir da equação: 
 
 ```{r echo=F, fig.align="center", out.width= "25%", fig.show='hold'}
 knitr::include_graphics('figuras/variograma3.png')
 ```
 
 
+$$\hat{\gamma}(h) = \dfrac{1}{2N(h)}\sum^{N(h)}_{i=1}[z(x_i) - z(x_i + h)]^2 $$
 
-* A determinação experimental do semivariograma, para cada valor de $h$, considera todos os pares de amostras $z(x)$ e $z(x+h)$, separadas pelo vetor distância $h$, a partir da equação: 
-
-$$\hat{\delta}(h) = \dfrac{1}{2N(h)}\sum^{N(h)}_{i=1}[z(x_i) - z(x_i + h)]^2 $$
-
-* Sendo $\hat{\delta}(h)$ o semivariograma estimado e $N(h)$ o número de pares de valores medidos, $z(x)$ e $z(x+h)$, separados pelo vetor $h$.  
+* Sendo $\hat{\gamma}(h)$ o semivariograma estimado e $N(h)$ o número de pares de valores medidos, $z(x)$ e $z(x+h)$, separados pelo vetor $h$.  
 
 ```{r echo=F, fig.align="center", out.width= "40%", fig.show='hold'}
 include_graphics('figuras/variograma1.png')
@@ -216,7 +214,7 @@ include_graphics('figuras/variograma2.png')
 [*Fonte: Referência científica: Druck, S.; Carvalho, M.S.; Câmara, G.; Monteiro, A.V.M. (eds) "Análise Espacial de Dados Geográficos". Brasília, EMBRAPA, 2004](http://www.dpi.inpe.br/gilberto/livro/analise/cap3-superficies.pdf)
 
 
-### Exemplo: Mapa sobre o teor de argila no solo.
+* **Exemplo:** Mapa sobre o teor de argila no solo.
 
 ```{r echo=F, fig.align="center", out.width= "70%", fig.show='hold'}
 knitr::include_graphics('figuras/geoestatistica7.png')
@@ -236,7 +234,7 @@ knitr::include_graphics('figuras/geoestatistica7.png')
 
 ### Mapa Temático
 
-#### Taxas de câncer de pulmão na população branca masculina nos Estados Unidos, por condados no ano de 1998
+* Taxas de câncer de pulmão na população branca masculina nos Estados Unidos, por condados no ano de 1998
 
 ```{r echo=F, fig.align="center", out.width="70%"}
 knitr::include_graphics('figuras/area1_2019.png')
@@ -257,7 +255,8 @@ knitr::include_graphics('figuras/moran_global.png')
 ```{r echo=F, fig.align="center", out.width="30%", fig.cap="Moran Local"}
 knitr::include_graphics('figuras/moran_local.png')
 ```
-#### Desigualdade no nível distrital na cobertura de saúde reprodutiva, materna, neonatal e infantil na Índia
+
+* Desigualdade no nível distrital na cobertura de saúde reprodutiva, materna, neonatal e infantil na Índia
 
 ```{r echo=F, fig.align="center", out.width="90%"}
 knitr::include_graphics('figuras/moran_local2.png')
@@ -317,11 +316,11 @@ knitr::include_graphics('figuras/logo_ubuntu.png')
 
 Fonte: [Dicas para integração e instalação do R 4.0 no Ubuntu 20.04 LTS e os pacotes espaciais](https://rtask.thinkr.fr/installation-of-r-4-0-on-ubuntu-20-04-lts-and-tips-for-spatial-packages/)
 
-# Serão apresentadas duas aplicações de Estatística Espacial utilização o pacote estatístico R
+# Serão feitas duas aplicações de Estatística Espacial utilização o pacote estatístico R:
 
 ## Aplicação I: Construindo mapas a partir da biblioteca geobr
 
-### Bibliotecas que serão utilizadas:
+* Bibliotecas que serão utilizadas:
 
 ```{r, echo=T}
 library(ggplot2)
@@ -335,20 +334,20 @@ library(ggspatial)
 
 ```
 
-### Para acessar os dados dos limites territoriais de todos os estados brasileiros é necessário utilizar a função *read_state*.
+* Para acessar os dados dos limites territoriais de todos os estados brasileiros é necessário utilizar a função *read_state*.
 
 ```{r, echo=T}
 brasil.ufs <- read_state(code_state = "all", year=2019, showProgress = FALSE)
 ```
 
-### Primeiro, vamos fazer um gráfico apenas com as geometrias.
+* Primeiro, vamos fazer um gráfico apenas com as geometrias.
 
 ```{r, echo=T}
 ggplot(brasil.ufs) + 
   geom_sf()
 ```
 
-### Para a construção de um mapa onde cada estado recebe uma cor de acordo com a sua região geogrática, procedemos da seguinte forma: 
+* Para a construção de um mapa onde cada estado recebe uma cor de acordo com a sua região geogrática, procedemos da seguinte forma: 
 
 ```{r, echo=T,  out.width="70%"}
 ggplot(brasil.ufs) + 
@@ -356,7 +355,8 @@ ggplot(brasil.ufs) +
   labs(fill="Região")
 ```
 
-### Agora utilizaremos dados relativos a porcentagem de municípios com rede de esgoto de acordo com a unidade da federação ( [fonte dos dados](https://pt.wikipedia.org/wiki/Lista_de_unidades_federativas_do_Brasil_por_acesso_%C3%A0_rede_de_esgoto) ) para fazer um gráfico. Vamos associar esses dados a tabela de acordo com a variável State e padronizaremos a porcentagem para variar de 0 a 100.
+* Agora utilizaremos dados relativos a porcentagem de municípios com rede de esgoto de acordo com a unidade da federação ([fonte dos dados](https://pt.wikipedia.org/wiki/Lista_de_unidades_federativas_do_Brasil_por_acesso_%C3%A0_rede_de_esgoto) ) para fazer um gráfico. Vamos associar esses dados a tabela de acordo com a variável State e padronizaremos a porcentagem para variar de 0 a 100.
+
 
 ```{r, echo=T,  out.width="70%"}
 acesso_san <- data.frame(code_state = c(12, 27, 16, 13, 29, 23, 53, 32, 52, 21, 51, 50, 31, 15, 
@@ -378,7 +378,7 @@ brasil.ufs |>
     theme_minimal()
 ```
 
-### Uma forma alteranativa de apresentar esses mesmos dados se dá pela apresentação de círculos com raios proporcionais a porcentgem de municípios com rede de esgoto no centroide de cada geometria (nesse caso, UF).
+* Uma forma alteranativa de apresentar esses mesmos dados se dá pela apresentação de círculos com raios proporcionais a porcentgem de municípios com rede de esgoto no centroide de cada geometria (nesse caso, UF).
 
 
 ```{r, echo=T,  out.width="70%"}
@@ -400,7 +400,7 @@ ggplot(brasil.ufs)+
 ```
 
 
-### Uma alternativa interativa para trabalhar com mapas é com a utilização do pacote *leaflet*
+* Uma alternativa interativa para trabalhar com mapas é com a utilização do pacote *leaflet*
 
 ```{r, echo=T,  out.width="70%"}
 data.frame(st_coordinates(coord_pontos), 
@@ -427,11 +427,10 @@ data.frame(st_coordinates(coord_pontos),
 
 * Essa aplicação também se encontra no [Curso de Estudos Ecológicos](https://ogcruz.github.io/) ministrado para o curso de [Pós-Graduação em Epidemiologia em Saúde Pública](http://ensino.ensp.fiocruz.br/cursos/mestrado-e-doutorado/epidemiologia-em-saude-publica) em 2019, pelos pesquisadores [Oswaldo Gonçalves Cruz (PROCC/FIOCRUZ)](https://lsbastos.github.io/PROCC/membro-9530671289607786.html) e [Wagner Tassinari (DEMAT/ICE/UFRRJ)](https://institucional.ufrrj.br/ruralpesquisa/wagner-de-souza-tassinari/)
 
+ **OBS:** Os dados e as malhas geográficas utilizadas nessa apresentação, estão disponíveis no seguinte endereço: ([link](https://github.com/wtassinari/espacial2021))
 
-* **OBS:** Os dados e as malhas geográficas utilizadas nessa apresentação, estão disponíveis no seguinte endereço: ([link](https://github.com/wtassinari/espacial2021))
 
-
-### Biliotecas do R que serão utilizadas
+* Biliotecas do R que serão utilizadas
 
 ```{r, echo=T}
 
@@ -443,7 +442,7 @@ library(spatstat)
 library(tmap)
 ```
 
-### Lendo a tabela da população por setor censitário e os shapes files do contorno e por setor censitário de Dourados/MS
+* Lendo a tabela da população por setor censitário e os shapes files do contorno e por setor censitário de Dourados/MS
 
 ```{r, echo=T}
 unzip('dados/pop2010.zip', exdir='dados')
@@ -457,16 +456,16 @@ contorno.sf <- read_sf('malhas/contorno.shp', crs = 31981)
 
 ```
 
-- **OBS:** Um aspecto muito importante dos dados espaciais é o sistema de referência de coordenadas (CRS) que é usado. Por exemplo, uma localização de (140, 12) não é significativa se você sabe onde está a origem e se a coordenada x está a 140 metros, quilômetros ou talvez graus de distância dela (na direção x). ([link](https://rspatial.org/raster/spatial/6-crs.html))
+**OBS:** Um aspecto muito importante dos dados espaciais é o sistema de referência de coordenadas (CRS) que é usado. Por exemplo, uma localização de (140, 12) não é significativa se você sabe onde está a origem e se a coordenada x está a 140 metros, quilômetros ou talvez graus de distância dela (na direção x). ([link](https://rspatial.org/raster/spatial/6-crs.html))
 
 
-### Fazendo um join com as tabelas com os setores censitários + população
+* Fazendo um join com as tabelas com os setores censitários + população
 
 ```{r, echo=T}
 setor.sf <- setor.sf %>% mutate (idsetor = as.numeric(CD_GEOCODI)) %>% inner_join(pop2010,by='idsetor')
 ```
 
-### Lendo e plotando os casos de dengue georreferenciados em Dourados/MS
+* Lendo e plotando os casos de dengue georreferenciados em Dourados/MS
 
 ```{r, echo=T}
 unzip('dados/dengue_dourados.zip', exdir='dados')
@@ -481,7 +480,7 @@ ggplot(setor.sf) +
   theme_void()
 ```
 
-### Lendo e plotando os os pontos de coleta de lixo georreferenciados em Dourados/MS
+* Lendo e plotando os os pontos de coleta de lixo georreferenciados em Dourados/MS
 
 ```{r, echo=T}
 unzip('dados/lixo_dourados.zip', exdir='dados')
@@ -498,7 +497,7 @@ ggplot(setor.sf) +
 
 Como podemos observar, existem alguns pontos de coleta de lixo fora do contorno de Dourados/MS
 
-### Uma forma de ficarmos só com os pontos dentro do polígono é utilizando o comando st_intersection.
+* Uma forma de ficarmos só com os pontos dentro do polígono é utilizando o comando st_intersection.
 
 
 ```{r, echo=T}
@@ -512,7 +511,7 @@ ggplot(setor.sf) +
   theme_void()
 ```
 
-### Utilizando as informações dos casos (pontos) + do lixo (ponto) + população de cada setor censitário (mapa temático)
+* Utilizando as informações dos casos (pontos) + do lixo (ponto) + população de cada setor censitário (mapa temático)
 
 ```{r, echo=T,  out.width="70%"}
 ggplot(setor.sf) + 
@@ -526,7 +525,7 @@ ggplot(setor.sf) +
   theme_minimal()
 ```
 
-### Agora serão construidos buffers de 500m de distância ao redor de cada ponto de coleta de lixo. Isso é interessante para verificar se os casos de dengue ocorrem em um raio de até 500m de distância dos pontos de coleta de lixo. Ou seja, a pergunta é, será que a distância dos pontos de coeta de lixo influenciam a ocorrência do caso de dengue ?
+* Agora serão construidos buffers de 500m de distância ao redor de cada ponto de coleta de lixo. Isso é interessante para verificar se os casos de dengue ocorrem em um raio de até 500m de distância dos pontos de coleta de lixo. Ou seja, a pergunta é, será que a distância dos pontos de coeta de lixo influenciam a ocorrência do caso de dengue ?
 
 **Buffers:** São polígonos que contornam um objeto a uma determinada distância. Sua principal função é materializar os conceitos de “perto” e “longe”.
 
@@ -542,7 +541,7 @@ ggplot(setor.sf) +
   theme_minimal()
 ```
 
-### Represntando os casos e o lixo de forma interativa
+* Represntando os casos e o lixo de forma interativa
 
 ```{r, echo=T,  out.width="90%"}
 tm_shape(setor.sf) +  tm_borders("black") +
@@ -552,7 +551,7 @@ tm_shape(setor.sf) +  tm_borders("black") +
   tmap_mode("view")
 ```
 
-### Convertendo o dado de pontos (padrão pontual) para dados de área
+* Convertendo o dado de pontos (padrão pontual) para dados de área
 
 ```{r, echo=T}
 ## conta casos por setor 
@@ -582,19 +581,19 @@ setor.sf <- setor.sf |>
 ```
 
 
-### Plotando o mapa temático dos casos por setor censitário
+* Plotando o mapa temático dos casos por setor censitário
 
 ```{r, echo=T,  out.width="70%"}
 plot(setor.sf['casos'])
 ```
 
-### Plotando o mapa temático dos pontos de coleta de lixo por setor censitário
+* Plotando o mapa temático dos pontos de coleta de lixo por setor censitário
 
 ```{r, echo=T,  out.width="70%"}
 plot(setor.sf['lixo'])
 ```
 
-### Calculando a taxa de incidência e plotando o mapa temático dos pontos de coleta de lixo por setor censitário
+* Calculando a taxa de incidência e plotando o mapa temático dos pontos de coleta de lixo por setor censitário
 
 ```{r, echo=T,  out.width="70%"}
 setor.sf$tx <- (setor.sf$casos/setor.sf$pop) * 1000
@@ -603,7 +602,7 @@ setor.sf$tx[is.na(setor.sf$tx)] <- 0 # Transformando os missings em zero
 summary(setor.sf$tx)
 ```
 
-### Plotando a distribuição da incidência em Dourados/MS
+* Plotando a distribuição da incidência em Dourados/MS
 
 ```{r, echo=T,  out.width="70%"}
 library(wesanderson)
@@ -616,7 +615,7 @@ ggplot(setor.sf) +
   theme_void()
 ```
 
-### Kernel por atributos
+* Kernel por atributos
 
 Vamos plotar o kernel por atributos referente a taxa de incidência de dengue em Dourados/MS.
 
@@ -632,7 +631,7 @@ plot(dourados.contorno)
 dourados.w <- as.owin(st_geometry(dourados.contorno))
 ```
 
-### Extraindo os centróides dos polígonos em Dourados/MS
+* Extraindo os centróides dos polígonos em Dourados/MS
 
 ```{r, echo=T,  out.width="70%"}
 centroides <- st_centroid(st_geometry(setor.sf))
@@ -644,7 +643,7 @@ names(centroides.sp) <- c('X','Y')
 plot(centroides.sp)
 ```
 
-### Colocando os pontos no formato sp
+* Colocando os pontos no formato sp
 
 ```{r, echo=T,  out.width="70%"}
 centroides.ppp <- ppp(centroides.sp$X,centroides.sp$Y, dourados.w)
@@ -652,16 +651,14 @@ centroides.ppp <- ppp(centroides.sp$X,centroides.sp$Y, dourados.w)
 plot(centroides.ppp,pch=19,cex=0.5)
 ```
 
-### Fazendo o kernel por atributo da taxa de detecção
+* Fazendo o kernel por atributo da taxa de detecção
 
 ```{r, echo=T,  out.width="70%"}
 kernel.tx <- density(centroides.ppp, 500, weights = setor.sf$tx, scalekernel = TRUE)
 plot(kernel.tx)
 ```
 
-## Matriz de Vizinhança
-
-### Construindo a matriz de vizinhança para verificar a autocorrelação espacial
+* Construindo a matriz de vizinhança para verificar a autocorrelação espacial
 
 ```{r, echo=T,  out.width="70%"}
 library(spdep)
@@ -670,7 +667,7 @@ viz
 ```
 
 
-### Iremos precisar da coordenadas dos centróides
+* Iremos precisar da coordenadas dos centróides
 
 ```{r, echo=T,  out.width="70%"}
 setor.sp <- as(setor.sf, 'Spatial') # convertendo em formato sp
@@ -678,7 +675,7 @@ coord <- coordinates(setor.sp) # coordenadas dos centroidas dos poligonos de dou
 class(setor.sp)
 ```
 
-### Verificando a malha de conectividade da vizinhança de Dourados/MS
+* Verificando a malha de conectividade da vizinhança de Dourados/MS
 
 ```{r, echo=T,  out.width="70%"}
 viz.sf <- as(nb2lines(viz, coords = coord), 'sf')
@@ -695,14 +692,14 @@ mapa.viz <- ggplot(setor.sf) +
 mapa.viz
 ```
 
-### Obtendo a correlação da taxa de incidência de dengue Dourados/MS
+* Obtendo a correlação da taxa de incidência de dengue Dourados/MS
 
 ```{r, echo=T,  out.width="70%"}
 pesos.viz <- nb2listw(viz)
 moran.test(setor.sf$tx, pesos.viz)
 ```
 
-### Plotando o correlograma
+* Plotando o correlograma
 
 ```{r, echo=T,  out.width="70%"}
 correl <- sp.correlogram(viz, setor.sf$tx, order = 8, method = "I")
@@ -713,7 +710,7 @@ correl
 plot(correl)
 ```
 
-### Mapeando os polígonos que tiveram os p-valores mais significativos no Moran Local.
+* Mapeando os polígonos que tiveram os p-valores mais significativos no Moran Local.
 
 ```{r, echo=T,  out.width="70%"}
 setor.sf$pval <- localmoran(setor.sf$tx, pesos.viz)[,5]
@@ -723,7 +720,7 @@ tm_shape(setor.sf) +
   tm_scale_bar(width = 0.15) 
 ```
 
-### Moran Local (Lisa Map) da taxa de incidência Dourados/MS
+* Moran Local (Lisa Map) da taxa de incidência Dourados/MS
 
 ```{r, echo=T,  out.width="70%"}
 resI <- localmoran.sad(lm(setor.sf$tx ~ 1), 1:length(viz), viz, style = "W")
